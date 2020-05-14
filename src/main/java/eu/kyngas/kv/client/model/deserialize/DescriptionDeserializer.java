@@ -1,10 +1,10 @@
-package eu.kyngas.kv.model.deserialize;
+package eu.kyngas.kv.client.model.deserialize;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import eu.kyngas.kv.model.DescParams;
-import eu.kyngas.kv.model.Description;
+import eu.kyngas.kv.client.model.DescParams;
+import eu.kyngas.kv.client.model.Description;
 import org.apache.commons.text.StringEscapeUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

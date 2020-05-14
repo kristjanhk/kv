@@ -31,3 +31,4 @@ nb-configuration.xml
 .gradle/
 build/
 /src/main/resources/application.yaml
+/kvdb/

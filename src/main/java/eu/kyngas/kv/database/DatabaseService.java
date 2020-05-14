@@ -1,5 +1,6 @@
-package eu.kyngas.kv.db;
+package eu.kyngas.kv.database;
 
+import eu.kyngas.kv.database.model.KvItem;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.enterprise.context.ApplicationScoped;

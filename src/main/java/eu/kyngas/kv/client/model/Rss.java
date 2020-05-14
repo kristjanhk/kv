@@ -1,4 +1,4 @@
-package eu.kyngas.kv.model;
+package eu.kyngas.kv.client.model;
 
 import lombok.Data;
 

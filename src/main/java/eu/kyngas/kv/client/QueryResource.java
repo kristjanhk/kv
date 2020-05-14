@@ -1,8 +1,8 @@
 package eu.kyngas.kv.client;
 
-import eu.kyngas.kv.db.KvItem;
-import eu.kyngas.kv.model.DescParams;
-import eu.kyngas.kv.model.Item;
+import eu.kyngas.kv.database.model.KvItem;
+import eu.kyngas.kv.client.model.DescParams;
+import eu.kyngas.kv.client.model.Item;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.inject.Inject;

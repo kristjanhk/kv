@@ -1,6 +1,6 @@
 package eu.kyngas.kv.client;
 
-import eu.kyngas.kv.model.Rss;
+import eu.kyngas.kv.client.model.Rss;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
 import javax.ws.rs.GET;

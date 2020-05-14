@@ -1,7 +1,7 @@
-package eu.kyngas.kv.model;
+package eu.kyngas.kv.client.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import eu.kyngas.kv.model.deserialize.TitleDeserializer;
+import eu.kyngas.kv.client.model.deserialize.TitleDeserializer;
 import lombok.Data;
 
 @Data

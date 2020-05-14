@@ -1,6 +1,6 @@
 package eu.kyngas.kv.filter;
 
-import eu.kyngas.kv.db.KvItem;
+import eu.kyngas.kv.database.model.KvItem;
 import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 

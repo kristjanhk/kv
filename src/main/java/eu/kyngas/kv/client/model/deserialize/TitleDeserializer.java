@@ -1,9 +1,9 @@
-package eu.kyngas.kv.model.deserialize;
+package eu.kyngas.kv.client.model.deserialize;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import eu.kyngas.kv.model.Title;
+import eu.kyngas.kv.client.model.Title;
 
 import java.io.IOException;
 import java.util.regex.Matcher;

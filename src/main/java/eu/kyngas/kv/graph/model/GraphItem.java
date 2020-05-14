@@ -1,4 +1,4 @@
-package eu.kyngas.kv.graph;
+package eu.kyngas.kv.graph.model;
 
 import lombok.Data;
 

@@ -2,10 +2,10 @@ package eu.kyngas.kv.scraper;
 
 import eu.kyngas.kv.client.Params;
 import eu.kyngas.kv.client.QueryService;
-import eu.kyngas.kv.db.DatabaseService;
-import eu.kyngas.kv.db.KvItem;
+import eu.kyngas.kv.database.DatabaseService;
+import eu.kyngas.kv.database.model.KvItem;
 import eu.kyngas.kv.filter.FilterService;
-import eu.kyngas.kv.model.Rss;
+import eu.kyngas.kv.client.model.Rss;
 import io.quarkus.scheduler.Scheduled;
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,7 +32,7 @@ public class ScraperService {
   // @Scheduled(every = "60s")
   void scrapeSales() {
     if (!scraperConfiguration.getEnabled()) {
-      log.info("Scraper is disabled");
+      log.info("Sales scraper is disabled");
       return;
     }
 
@@ -41,14 +41,14 @@ public class ScraperService {
     List<KvItem> changedItems = filterService.filterChanges(items, databaseService.findSales());
 
     databaseService.save(changedItems);
-    log.info("Persisted {} sale items", changedItems.size());
+    log.info("Saved {} sale items", changedItems.size());
   }
 
   @Scheduled(cron = "0 0 * ? * *")
   // @Scheduled(every = "60s")
   void scrapeRents() {
     if (!scraperConfiguration.getEnabled()) {
-      log.info("Scraper is disabled");
+      log.info("Rents scraper is disabled");
       return;
     }
 
@@ -57,6 +57,6 @@ public class ScraperService {
     List<KvItem> changedItems = filterService.filterChanges(items, databaseService.findRents());
 
     databaseService.save(changedItems);
-    log.info("Persisted {} rent items", changedItems.size());
+    log.info("Saved {} rent items", changedItems.size());
   }
 }

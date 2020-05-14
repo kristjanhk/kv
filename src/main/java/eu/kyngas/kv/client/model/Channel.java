@@ -1,4 +1,4 @@
-package eu.kyngas.kv.model;
+package eu.kyngas.kv.client.model;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import java.util.List;

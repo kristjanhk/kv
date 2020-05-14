@@ -1,7 +1,8 @@
 package eu.kyngas.kv.graph;
 
-import eu.kyngas.kv.db.DatabaseService;
-import eu.kyngas.kv.db.KvItem;
+import eu.kyngas.kv.database.DatabaseService;
+import eu.kyngas.kv.database.model.KvItem;
+import eu.kyngas.kv.graph.model.GraphItem;
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateExtension;
 import io.quarkus.qute.TemplateInstance;

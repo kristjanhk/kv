@@ -1,7 +1,7 @@
-package eu.kyngas.kv.model;
+package eu.kyngas.kv.client.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import eu.kyngas.kv.db.KvItem;
+import eu.kyngas.kv.database.model.KvItem;
 import lombok.Data;
 
 import java.time.LocalDateTime;

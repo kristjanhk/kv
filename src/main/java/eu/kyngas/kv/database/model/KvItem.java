@@ -1,4 +1,4 @@
-package eu.kyngas.kv.db;
+package eu.kyngas.kv.database.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
@@ -9,8 +9,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Transient;
 import java.time.LocalDateTime;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.joining;
 
 @Builder
 @EqualsAndHashCode(callSuper = false)
@@ -46,6 +47,6 @@ public class KvItem extends PanacheEntityBase {
   public String getUniqueId() {
     return Stream.of(address, rooms, roomSize, roomFloor)
       .map(String::valueOf)
-      .collect(Collectors.joining("-"));
+      .collect(joining("-"));
   }
 }
