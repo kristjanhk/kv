@@ -62,7 +62,7 @@ public class QueryResource {
   }
 
   @GET
-  @Path("console/sales")
+  @Path("console/rents")
   public int getConsoleRents() {
     log.info(queryService.query(Params.createRentParams(identity())).getChannel().getItem().stream()
                .sorted(comparing((Item item) -> item.getPubDate().toLocalDate(), reverseOrder())
