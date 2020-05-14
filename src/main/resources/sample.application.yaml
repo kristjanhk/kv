@@ -1,0 +1,52 @@
+"%dev":
+  quarkus:
+    datasource:
+      jdbc:
+        url: jdbc:postgresql://localhost:5432/kvdb-test
+    hibernate-orm:
+      database:
+        generation: drop-and-create
+    log:
+      level: DEBUG
+      console:
+        color: true
+    vertx:
+      warning-exception-time: 9999
+
+quarkus:
+  http:
+    host: localhost
+    port: 8080
+  datasource:
+    db-kind: postgresql
+    username: username
+    password: password
+    jdbc:
+      url: jdbc:postgresql://localhost:5432/kvdb-live
+  hibernate-orm:
+    database:
+      generation: validate
+  log:
+    level: INFO
+    console:
+      format: "%d{HH:mm:ss.SSS} %p (%F:%L) %s%e%n"
+    file:
+      enable: true
+      format: "%d{HH:mm:ss.SSS} %p (%F:%L) %s%e%n"
+      async: true
+    category:
+      'org.hibernate':
+        level: INFO
+      'org.postgresql':
+        level: INFO
+      'org.jboss.resteasy':
+        level: INFO
+
+eu:
+  kyngas:
+    kv:
+      client:
+        QueryClient/mp-rest/url: https://www.kv.ee
+
+scraper:
+  enabled: true
