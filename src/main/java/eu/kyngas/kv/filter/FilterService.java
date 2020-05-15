@@ -16,8 +16,8 @@ import static java.util.stream.Collectors.*;
 public class FilterService {
 
   public List<KvItem> filterChanges(List<KvItem> newItems, List<KvItem> dbItems) {
-    Map<Integer, KvItem> newItemByKvId = newItems.stream().collect(toMap(KvItem::getKvId, identity()));
-    Map<Integer, List<KvItem>> dbItemByKvId = dbItems.stream().collect(groupingBy(KvItem::getKvId));
+    Map<Long, KvItem> newItemByKvId = newItems.stream().collect(toMap(KvItem::getKvId, identity()));
+    Map<Long, List<KvItem>> dbItemByKvId = dbItems.stream().collect(groupingBy(KvItem::getKvId));
     Map<String, List<KvItem>> dbItemByUniqueId = dbItems.stream().collect(groupingBy(KvItem::getUniqueId));
 
     markRemovedItems(newItemByKvId, dbItemByKvId);
@@ -55,7 +55,7 @@ public class FilterService {
     return input == null ? "null" : input.toString();
   }
 
-  private void markRemovedItems(Map<Integer, KvItem> newItemByKvId, Map<Integer, List<KvItem>> dbItemByKvId) {
+  private void markRemovedItems(Map<Long, KvItem> newItemByKvId, Map<Long, List<KvItem>> dbItemByKvId) {
     dbItemByKvId.entrySet().stream()
       .filter(e -> !newItemByKvId.containsKey(e.getKey()))
       .flatMap(e -> e.getValue().stream())
@@ -63,7 +63,7 @@ public class FilterService {
   }
 
   private void markPrevKvId(KvItem newItem,
-                            Map<Integer, KvItem> newItemByKvId,
+                            Map<Long, KvItem> newItemByKvId,
                             Map<String, List<KvItem>> dbItemByUniqueId) {
     List<KvItem> dbUniqueItems = dbItemByUniqueId.getOrDefault(newItem.getUniqueId(), List.of());
     if (dbUniqueItems.stream().filter(KvItem::isRemoved).map(KvItem::getKvId).collect(toSet()).size() == 1) {

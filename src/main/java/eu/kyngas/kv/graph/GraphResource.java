@@ -53,7 +53,7 @@ public class GraphResource {
       return List.of();
     }
 
-    Map<Integer, List<KvItem>> itemById = items.stream().collect(groupingBy(KvItem::getKvId));
+    Map<Long, List<KvItem>> itemById = items.stream().collect(groupingBy(KvItem::getKvId));
     itemById.values().forEach(list -> list.sort(comparing(KvItem::getInsertDate)));
     return itemById.entrySet().stream()
       .map(e -> {

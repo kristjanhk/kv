@@ -24,8 +24,8 @@ public class KvItem extends PanacheEntityBase {
   @GeneratedValue
   @EqualsAndHashCode.Exclude
   private Long id;
-  private int kvId;
-  private int prevKvId;
+  private long kvId;
+  private Long prevKvId;
   private String kvType;
   private String link;
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss dd.MM.yyyy")
