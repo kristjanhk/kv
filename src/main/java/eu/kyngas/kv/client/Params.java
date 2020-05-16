@@ -1,5 +1,6 @@
 package eu.kyngas.kv.client;
 
+import io.quarkus.runtime.annotations.RegisterForReflection;
 import io.vertx.core.json.JsonObject;
 import lombok.Builder;
 import lombok.Data;
@@ -12,6 +13,7 @@ import java.util.Objects;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
+@RegisterForReflection
 @Builder
 @Data
 public class Params {
@@ -42,7 +44,7 @@ public class Params {
     return operator.<ParamsBuilder>compose(b -> b
       .dealType(Deal.SALE.getType())
       .priceType(Price.TOTAL.getType())
-      .priceMin(20_000)
+      .priceMin(5000)
       .priceMax(500_000))
       .apply(defaultBuilder())
       .build();
@@ -69,7 +71,7 @@ public class Params {
       .objectType("1")
       .parish(Parish.TARTUMAA.getType())
       .roomsMin(1)
-      .roomsMax(4);
+      .roomsMax(8);
   }
 
   @Getter

@@ -1,5 +1,8 @@
 "%dev":
   quarkus:
+    http:
+      host: localhost
+      port: 8081
     datasource:
       jdbc:
         url: jdbc:postgresql://localhost:5432/test

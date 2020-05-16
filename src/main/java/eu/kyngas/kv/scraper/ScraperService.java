@@ -28,8 +28,8 @@ public class ScraperService {
   @Inject
   FilterService filterService;
 
-  @Scheduled(cron = "0 0 * ? * *")
-  // @Scheduled(every = "60s")
+  @Scheduled(cron = "0 0 * ? * *") // every hour
+  // @Scheduled(cron = "0 * * ? * *") // every minute
   void scrapeSales() {
     if (!scraperConfiguration.getEnabled()) {
       log.info("Sales scraper is disabled");
@@ -44,8 +44,8 @@ public class ScraperService {
     log.info("Saved {} sale items", changedItems.size());
   }
 
-  @Scheduled(cron = "0 0 * ? * *")
-  // @Scheduled(every = "60s")
+  @Scheduled(cron = "0 0 * ? * *") // every hour
+  // @Scheduled(cron = "0 * * ? * *") // every minute
   void scrapeRents() {
     if (!scraperConfiguration.getEnabled()) {
       log.info("Rents scraper is disabled");

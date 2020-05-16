@@ -32,3 +32,4 @@ nb-configuration.xml
 build/
 /src/main/resources/application.yaml
 /kvdb/
+/quarkus.log
