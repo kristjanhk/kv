@@ -1,8 +1,10 @@
-package eu.kyngas.kv.client;
+package eu.kyngas.kv.client.kv.rss;
 
+import eu.kyngas.kv.client.kv.KvParams;
+import eu.kyngas.kv.client.kv.KvService;
+import eu.kyngas.kv.client.kv.rss.model.DescParams;
+import eu.kyngas.kv.client.kv.rss.model.Item;
 import eu.kyngas.kv.database.model.KvItem;
-import eu.kyngas.kv.client.model.DescParams;
-import eu.kyngas.kv.client.model.Item;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.inject.Inject;
@@ -18,45 +20,47 @@ import static java.util.Comparator.*;
 import static java.util.function.UnaryOperator.identity;
 
 @Slf4j
-@Path("")
+@Path("kv/rss")
 @Produces(MediaType.APPLICATION_JSON)
-public class QueryResource {
+public class KvRssResource {
   private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("HH:mm dd.MM.yyyy");
 
   @Inject
-  QueryService queryService;
+  KvService kvService;
 
   @GET
   @Path("sales")
   public List<KvItem> getSales() {
-    return queryService.query(Params.createSaleParams(identity())).getChannel().getItem().stream()
+    return kvService.getRssFeed(KvParams.createSaleParams(identity())).getChannel().getItem().stream()
+      .filter(Item::isValid)
       .map(item -> item.toKvItem(true))
-      .sorted(comparing((KvItem item) -> item.getPublishDate().toLocalDate(), reverseOrder())
-                .thenComparing(KvItem::getPricePerM2, nullsLast(naturalOrder()))
-                .thenComparing(KvItem::getPrice))
+      .sorted(comparing((KvItem item) -> item.getLatestChangeItem().getPublishDate().toLocalDate(), reverseOrder())
+                .thenComparing(item -> item.getLatestChangeItem().getPricePerM2(), nullsLast(naturalOrder()))
+                .thenComparing(item -> item.getLatestChangeItem().getPrice()))
       .collect(Collectors.toList());
   }
 
   @GET
   @Path("rents")
   public List<KvItem> getRents() {
-    return queryService.query(Params.createRentParams(identity())).getChannel().getItem().stream()
+    return kvService.getRssFeed(KvParams.createRentParams(identity())).getChannel().getItem().stream()
+      .filter(Item::isValid)
       .map(item -> item.toKvItem(false))
-      .sorted(comparing((KvItem item) -> item.getPublishDate().toLocalDate(), reverseOrder())
-                .thenComparing(KvItem::getPricePerM2, nullsLast(naturalOrder()))
-                .thenComparing(KvItem::getPrice))
+      .sorted(comparing((KvItem item) -> item.getLatestChangeItem().getPublishDate().toLocalDate(), reverseOrder())
+                .thenComparing(item -> item.getLatestChangeItem().getPricePerM2(), nullsLast(naturalOrder()))
+                .thenComparing(item -> item.getLatestChangeItem().getPrice()))
       .collect(Collectors.toList());
   }
 
   @GET
   @Path("console/sales")
   public int getConsoleSales() {
-    log.info(queryService.query(Params.createSaleParams(identity())).getChannel().getItem().stream()
+    log.info(kvService.getRssFeed(KvParams.createSaleParams(identity())).getChannel().getItem().stream()
                .sorted(comparing((Item item) -> item.getPubDate().toLocalDate(), reverseOrder())
                          .thenComparing((Item item) -> item.getDescription().getParams().getPricePerM2(),
                                         nullsLast(naturalOrder()))
                          .thenComparing(item -> item.getTitle().getPrice()))
-               .map(QueryResource::formatItem)
+               .map(KvRssResource::formatItem)
                .collect(Collectors.joining(",\n", "\n", "")));
     return 200;
   }
@@ -64,12 +68,12 @@ public class QueryResource {
   @GET
   @Path("console/rents")
   public int getConsoleRents() {
-    log.info(queryService.query(Params.createRentParams(identity())).getChannel().getItem().stream()
+    log.info(kvService.getRssFeed(KvParams.createRentParams(identity())).getChannel().getItem().stream()
                .sorted(comparing((Item item) -> item.getPubDate().toLocalDate(), reverseOrder())
                          .thenComparing((Item item) -> item.getDescription().getParams().getPricePerM2(),
                                         nullsLast(naturalOrder()))
                          .thenComparing(item -> item.getTitle().getPrice()))
-               .map(QueryResource::formatItem)
+               .map(KvRssResource::formatItem)
                .collect(Collectors.joining(",\n", "\n", "")));
     return 200;
   }

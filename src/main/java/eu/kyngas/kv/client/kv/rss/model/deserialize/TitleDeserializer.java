@@ -1,14 +1,16 @@
-package eu.kyngas.kv.client.model.deserialize;
+package eu.kyngas.kv.client.kv.rss.model.deserialize;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import eu.kyngas.kv.client.model.Title;
+import eu.kyngas.kv.client.kv.rss.model.Title;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Slf4j
 public class TitleDeserializer extends StdDeserializer<Title> {
   private static final Pattern YYR_PATTERN = Pattern.compile("Anda üürile korter, (\\d) tuba (.*), ([0-9. ]+) EUR");
   private static final Pattern MYYK_PATTERN = Pattern.compile("Müüa korter, (\\d) tuba (.*), ([0-9. ]+) EUR");
@@ -22,6 +24,7 @@ public class TitleDeserializer extends StdDeserializer<Title> {
     String input = ctxt.readValue(p, String.class).replace('\u00A0',' ');
     Matcher matcher = getValidMatcher(input);
     if (matcher == null) {
+      log.error("Could not deserialize value {}", input);
       return null;
     }
 

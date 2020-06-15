@@ -1,4 +1,4 @@
-package eu.kyngas.kv.client;
+package eu.kyngas.kv.client.kv;
 
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import io.vertx.core.json.JsonObject;
@@ -7,8 +7,10 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import javax.ws.rs.QueryParam;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
@@ -16,23 +18,44 @@ import java.util.stream.Collectors;
 @RegisterForReflection
 @Builder
 @Data
-public class Params {
+public class KvParams {
+  @QueryParam("act")
   private String act;
   private int page;
+  @QueryParam("orderby")
   private String orderby;
+  @QueryParam("page_size")
   private int pageSize;
+  @QueryParam("deal_type")
   private int dealType;
+  @QueryParam("county")
   private int county;
+  @QueryParam("search_type")
   private String searchType;
+  @QueryParam("object_type")
   private String objectType;
+  @QueryParam("parish")
   private int parish;
+  @QueryParam("rooms_min")
   private int roomsMin;
+  @QueryParam("rooms_max")
   private int roomsMax;
+  @QueryParam("price_type")
   private int priceType;
+  @QueryParam("price_min")
   private int priceMin;
+  @QueryParam("price_max")
   private int priceMax;
 
-  public String toQueryParam() {
+  public String getType() {
+    return Arrays.stream(Deal.values())
+      .filter(deal -> deal.getType() == dealType)
+      .findFirst()
+      .map(deal -> deal.name().toLowerCase())
+      .orElseThrow();
+  }
+
+  public String toEncodedQueryParam() {
     String params = JsonObject.mapFrom(this).stream()
       .filter(Objects::nonNull)
       .map(e -> e.getKey() + "=" + e.getValue().toString())
@@ -40,9 +63,9 @@ public class Params {
     return URLEncoder.encode(params, StandardCharsets.UTF_8);
   }
 
-  public static Params createSaleParams(UnaryOperator<ParamsBuilder> operator) {
-    return operator.<ParamsBuilder>compose(b -> b
-      .dealType(Deal.SALE.getType())
+  public static KvParams createSaleParams(UnaryOperator<KvParamsBuilder> operator) {
+    return operator.<KvParamsBuilder>compose(b -> b
+      .dealType(Deal.APARTMENT_SALE.getType())
       .priceType(Price.TOTAL.getType())
       .priceMin(5000)
       .priceMax(500_000))
@@ -50,9 +73,9 @@ public class Params {
       .build();
   }
 
-  public static Params createRentParams(UnaryOperator<ParamsBuilder> operator) {
-    return operator.<ParamsBuilder>compose(b -> b
-      .dealType(Deal.RENT.getType())
+  public static KvParams createRentParams(UnaryOperator<KvParamsBuilder> operator) {
+    return operator.<KvParamsBuilder>compose(b -> b
+      .dealType(Deal.APARTMENT_RENT.getType())
       .priceType(Price.TOTAL.getType())
       .priceMin(0)
       .priceMax(1000))
@@ -60,11 +83,12 @@ public class Params {
       .build();
   }
 
-  private static ParamsBuilder defaultBuilder() {
-    return Params.builder()
+
+  private static KvParamsBuilder defaultBuilder() {
+    return KvParams.builder()
       .act("search.simple")
       .page(1)
-      .orderby(Order.CHEAPEST_FIRST.getType())
+      .orderby(Order.NEWEST_FIRST.getType())
       .pageSize(10_000)
       .county(County.TARTU.getType())
       .searchType("new")
@@ -77,35 +101,53 @@ public class Params {
   @Getter
   @RequiredArgsConstructor
   private enum Order {
-    CHEAPEST_FIRST("pawl");
+    NONE("cd"),
+    CHEAPEST_FIRST("pawl"),
+    CHEAPEST_LAST("pdwl"),
+    CHEAPEST_M2_FIRST("mawl"),
+    CHEAPEST_M2_LAST("mdwl"),
+    NEWEST_FIRST("cdwl"),
+    NEWEST_LAST("cawl"),
+    MAX_SIZE("adwl"),
+    MIN_SIZE("aawl");
     private final String type;
   }
 
   @Getter
   @RequiredArgsConstructor
-  private enum Deal {
-    SALE(1), RENT(2);
+  public enum Deal {
+    APARTMENT_SALE(1),
+    APARTMENT_RENT(2),
+    APARTMENT_SHORT_RENT(30),
+    APARTMENT_ALL_RENT(20),
+    HOUSE_SALE(3),
+    HOUSE_RENT(4),
+    HOUSE_SHORT_RENT(31),
+    HOUSE_ALL_RENT(21);
     private final int type;
   }
 
   @Getter
   @RequiredArgsConstructor
   private enum County {
-    TARTU(12);
+    TARTU(12),
+    TALLINN(1);
     private final int type;
   }
 
   @Getter
   @RequiredArgsConstructor
   private enum Parish {
-    TARTUMAA(1063);
+    TARTUMAA(1063),
+    HARJUMAA(1061);
     private final int type;
   }
 
   @Getter
   @RequiredArgsConstructor
   private enum Price {
-    TOTAL(1), AREA(2);
+    TOTAL(1),
+    AREA(2);
     private final int type;
   }
 

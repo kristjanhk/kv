@@ -1,4 +1,4 @@
-package eu.kyngas.kv.client.model.deserialize;
+package eu.kyngas.kv.util;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;

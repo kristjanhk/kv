@@ -1,9 +1,9 @@
-package eu.kyngas.kv.client.model.deserialize;
+package eu.kyngas.kv.client.kv.rss.model.deserialize;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import eu.kyngas.kv.client.model.Rss;
+import eu.kyngas.kv.client.kv.rss.model.Rss;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.WebApplicationException;

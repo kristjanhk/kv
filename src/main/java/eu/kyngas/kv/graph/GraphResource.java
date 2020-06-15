@@ -1,6 +1,5 @@
 package eu.kyngas.kv.graph;
 
-import eu.kyngas.kv.database.DatabaseService;
 import eu.kyngas.kv.database.model.KvItem;
 import eu.kyngas.kv.graph.model.GraphItem;
 import io.quarkus.qute.Template;
@@ -12,20 +11,17 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.util.ArrayList;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Map;
 
+import static eu.kyngas.kv.util.Predicates.withPrevious;
 import static java.time.format.DateTimeFormatter.ISO_DATE_TIME;
 import static java.util.Comparator.comparing;
-import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 
 @Path("graph")
 @Produces(MediaType.TEXT_HTML)
 public class GraphResource {
-  @Inject
-  DatabaseService databaseService;
   @Inject
   Template sales;
   @Inject
@@ -34,13 +30,13 @@ public class GraphResource {
   @GET
   @Path("sales")
   public TemplateInstance getSales() {
-    return sales.data("items", toGraphItems(databaseService.findSales()));
+    return sales.data("items", toGraphItems(KvItem.listSales()));
   }
 
   @GET
   @Path("rents")
   public TemplateInstance getRents() {
-    return rents.data("items", toGraphItems(databaseService.findRents()));
+    return rents.data("items", toGraphItems(KvItem.listRents()));
   }
 
   @TemplateExtension
@@ -49,29 +45,17 @@ public class GraphResource {
   }
 
   private List<GraphItem> toGraphItems(List<KvItem> items) {
-    if (items.isEmpty()) {
-      return List.of();
-    }
-
-    Map<Long, List<KvItem>> itemById = items.stream().collect(groupingBy(KvItem::getKvId));
-    itemById.values().forEach(list -> list.sort(comparing(KvItem::getInsertDate)));
-    return itemById.entrySet().stream()
-      .map(e -> {
-        GraphItem gItem = new GraphItem();
-        gItem.setUniqueId(e.getValue().get(0).getUniqueId());
-        gItem.setLink("https://www.kv.ee/" + e.getKey());
-
-        List<GraphItem.PriceItem> priceList = new ArrayList<>();
-        Double lastPrice = null;
-        for (KvItem item : e.getValue()) {
-          if (lastPrice == null || !lastPrice.equals(item.getPrice())) {
-            priceList.add(new GraphItem.PriceItem(item.getInsertDate(), item.getPrice()));
-            lastPrice = item.getPrice();
-          }
-        }
-
-        gItem.setData(priceList);
-        return gItem;
-      }).collect(toList());
+    return items.stream()
+      .map(item -> GraphItem.builder()
+        .uniqueId(item.getUniqueId())
+        .link("https://www.kv.ee/" + item.getExternalId())
+        .data(item.getChangeItems().stream()
+                .sorted(comparing(kvChangeItem -> kvChangeItem.getInsertDate().truncatedTo(ChronoUnit.HOURS)))
+                .filter(withPrevious((change, prev) -> prev == null || !prev.getPrice().equals(change.getPrice())))
+                .map(change -> new GraphItem.PriceItem(change.getPublishDate().truncatedTo(ChronoUnit.HOURS),
+                                                       change.getPrice()))
+                .collect(toList()))
+        .build())
+      .collect(toList());
   }
 }

@@ -1,12 +1,14 @@
 package eu.kyngas.kv.graph.model;
 
 import io.quarkus.runtime.annotations.RegisterForReflection;
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @RegisterForReflection
+@Builder
 @Data
 public class GraphItem {
   private String uniqueId;

@@ -1,52 +1,69 @@
 package eu.kyngas.kv.database.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import eu.kyngas.kv.client.kv.KvParams;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.stream.Stream;
 
+import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.joining;
 
+@Entity
+@Data
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-@Entity
 public class KvItem extends PanacheEntityBase {
   @Id
   @GeneratedValue
-  @EqualsAndHashCode.Exclude
-  private Long id;
-  private long kvId;
-  private Long prevKvId;
-  private String kvType;
-  private String link;
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss dd.MM.yyyy")
-  private LocalDateTime publishDate;
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss dd.MM.yyyy")
-  @EqualsAndHashCode.Exclude
+  public Long id;
+  private long externalId;
+  private Long prevExternalId;
   private LocalDateTime insertDate;
+  private String dealType;
+  private String link;
+  private String county;
+  private String area;
+  private String district;
   private String address;
-  private String imgLink;
-  private Double price;
-  private Double pricePerM2;
   private int rooms;
   private Double roomSize;
   private Integer roomFloor;
   private Integer totalFloor;
   private boolean removed;
 
+  @OneToMany(mappedBy = "kvItem", cascade = CascadeType.PERSIST)
+  private List<KvChangeItem> changeItems;
+
   @Transient
   public String getUniqueId() {
-    return Stream.of(address, rooms, roomSize, roomFloor)
+    return Stream.of(getFullAddress(), rooms, roomSize, roomFloor)
       .map(String::valueOf)
-      .collect(joining("-"));
+      .collect(joining(" - "));
+  }
+
+  @Transient
+  public String getFullAddress() {
+    return String.join(", ", county, area, district, address);
+  }
+
+  @Transient
+  public KvChangeItem getLatestChangeItem() {
+    return changeItems.stream()
+      .max(comparing(KvChangeItem::getPublishDate))
+      .orElseThrow();
+  }
+
+  public static List<KvItem> listSales() {
+    return KvItem.list("dealType", KvParams.Deal.APARTMENT_SALE.name().toLowerCase());
+  }
+
+  public static List<KvItem> listRents() {
+    return KvItem.list("dealType", KvParams.Deal.APARTMENT_RENT.name().toLowerCase());
   }
 }

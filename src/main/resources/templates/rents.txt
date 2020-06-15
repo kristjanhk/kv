@@ -46,7 +46,7 @@
             unit: 'hour',
             timezone: 'Europe/Tallinn',
             displayFormats: {
-              hour: 'HH.mm DD.MM'
+              hour: 'DD.MM HH.mm'
             }
           }
         }],

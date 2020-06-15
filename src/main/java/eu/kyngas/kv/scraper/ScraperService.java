@@ -1,16 +1,16 @@
 package eu.kyngas.kv.scraper;
 
-import eu.kyngas.kv.client.Params;
-import eu.kyngas.kv.client.QueryService;
-import eu.kyngas.kv.database.DatabaseService;
+import eu.kyngas.kv.client.kv.KvParams;
+import eu.kyngas.kv.client.kv.KvService;
+import eu.kyngas.kv.client.kv.model.KvSearchPageItem;
+import eu.kyngas.kv.database.ChangesService;
 import eu.kyngas.kv.database.model.KvItem;
-import eu.kyngas.kv.filter.FilterService;
-import eu.kyngas.kv.client.model.Rss;
 import io.quarkus.scheduler.Scheduled;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 import java.util.List;
 
 import static java.util.function.UnaryOperator.identity;
@@ -22,41 +22,41 @@ public class ScraperService {
   @Inject
   ScraperConfiguration scraperConfiguration;
   @Inject
-  QueryService queryService;
+  KvService kvService;
   @Inject
-  DatabaseService databaseService;
-  @Inject
-  FilterService filterService;
+  ChangesService changesService;
 
   @Scheduled(cron = "0 0 * ? * *") // every hour
-  // @Scheduled(cron = "0 * * ? * *") // every minute
+  // @Scheduled(every = "60s")
+  @Transactional
   void scrapeSales() {
     if (!scraperConfiguration.getEnabled()) {
       log.info("Sales scraper is disabled");
       return;
     }
 
-    Rss rss = queryService.query(Params.createSaleParams(identity()));
-    List<KvItem> items = rss.getChannel().getItem().stream().map(item -> item.toKvItem(true)).collect(toList());
-    List<KvItem> changedItems = filterService.filterChanges(items, databaseService.findSales());
+    List<KvItem> items = kvService.getAllSearchItems(KvParams.createSaleParams(identity())).stream()
+      .map(KvSearchPageItem::toKvItem)
+      .collect(toList());
+    int count = changesService.check(items, KvItem.listSales());
 
-    databaseService.save(changedItems);
-    log.info("Saved {} sale items", changedItems.size());
+    log.info("Saved {} sale items", count);
   }
 
   @Scheduled(cron = "0 0 * ? * *") // every hour
-  // @Scheduled(cron = "0 * * ? * *") // every minute
+  // @Scheduled(every = "60s")
+  @Transactional
   void scrapeRents() {
     if (!scraperConfiguration.getEnabled()) {
       log.info("Rents scraper is disabled");
       return;
     }
 
-    Rss rss = queryService.query(Params.createRentParams(identity()));
-    List<KvItem> items = rss.getChannel().getItem().stream().map(item -> item.toKvItem(false)).collect(toList());
-    List<KvItem> changedItems = filterService.filterChanges(items, databaseService.findRents());
+    List<KvItem> items = kvService.getAllSearchItems(KvParams.createRentParams(identity())).stream()
+      .map(KvSearchPageItem::toKvItem)
+      .collect(toList());
+    int count = changesService.check(items, KvItem.listRents());
 
-    databaseService.save(changedItems);
-    log.info("Saved {} rent items", changedItems.size());
+    log.info("Saved {} rent items", count);
   }
 }

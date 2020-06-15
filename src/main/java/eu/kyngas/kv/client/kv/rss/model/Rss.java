@@ -1,4 +1,4 @@
-package eu.kyngas.kv.client.model;
+package eu.kyngas.kv.client.kv.rss.model;
 
 import lombok.Data;
 
