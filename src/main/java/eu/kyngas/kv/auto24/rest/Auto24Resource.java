@@ -22,7 +22,7 @@ public class Auto24Resource {
   @GET
   @Path("debug")
   public List<Auto24SearchPageItem> getItems() {
-    Auto24ClientParams params = Auto24ClientParams.createSaleParams();
+    Auto24ClientParams params = Auto24ClientParams.createLexusParams();
     log.debug("AutoParams: {}", params);
 
     List<Auto24SearchPageItem> results = auto24Service.getAllSearchItems(params);

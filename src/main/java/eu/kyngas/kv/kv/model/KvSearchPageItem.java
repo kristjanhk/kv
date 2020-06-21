@@ -31,10 +31,6 @@ public class KvSearchPageItem {
     return "https://www.kv.ee/" + id;
   }
 
-  public String getFullAddress() {
-    return String.join(", ", county, area, district, address);
-  }
-
   public KvItem toKvItem() {
     KvChangeItem changeItem = KvChangeItem.builder()
       .publishDate(publishDate)
@@ -58,7 +54,6 @@ public class KvSearchPageItem {
       .totalFloor(totalFloor)
       .changeItems(List.of(changeItem))
       .build();
-
     changeItem.setKvItem(item);
     return item;
   }

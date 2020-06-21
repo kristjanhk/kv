@@ -25,7 +25,6 @@ public class Auto24SearchPageParser {
         Description desc = getDescription(element);
         return Auto24SearchPageItem.builder()
           .id(getId(element))
-          .link(getLink(element))
           .imgLink(getImgLink(element))
           .mark(desc.getMark())
           .model(desc.getModel())
@@ -58,11 +57,6 @@ public class Auto24SearchPageParser {
       String id = link.split("/")[2].strip();
       return parseInt(id);
     });
-  }
-
-  private static String getLink(Element element) {
-    Element el = element.getElementsByClass("small-image").first();
-    return logEx(el, () -> "https://www.auto24.ee" + el.attributes().get("href"));
   }
 
   private static String getImgLink(Element element) {

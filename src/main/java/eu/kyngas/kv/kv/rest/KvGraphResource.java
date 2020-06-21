@@ -1,6 +1,6 @@
 package eu.kyngas.kv.kv.rest;
 
-import eu.kyngas.kv.kv.model.GraphItem;
+import eu.kyngas.kv.kv.model.KvGraphItem;
 import eu.kyngas.kv.kv.model.KvItem;
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateExtension;
@@ -21,7 +21,7 @@ import static java.util.stream.Collectors.toList;
 
 @Path("graph")
 @Produces(MediaType.TEXT_HTML)
-public class GraphResource {
+public class KvGraphResource {
   @ResourcePath("kv/sales")
   Template sales;
   @ResourcePath("kv/rents")
@@ -40,20 +40,20 @@ public class GraphResource {
   }
 
   @TemplateExtension
-  static String timeFormatted(GraphItem.PriceItem item) {
+  static String timeFormatted(KvGraphItem.PriceItem item) {
     return item.getTime().format(ISO_DATE_TIME);
   }
 
-  private List<GraphItem> toGraphItems(List<KvItem> items) {
+  private List<KvGraphItem> toGraphItems(List<KvItem> items) {
     return items.stream()
-      .map(item -> GraphItem.builder()
+      .map(item -> KvGraphItem.builder()
         .uniqueId(item.getUniqueId())
         .link("https://www.kv.ee/" + item.getExternalId())
         .data(item.getChangeItems().stream()
                 .sorted(comparing(kvChangeItem -> kvChangeItem.getInsertDate().truncatedTo(ChronoUnit.HOURS)))
                 .filter(withPrevious((change, prev) -> prev == null || !prev.getPrice().equals(change.getPrice())))
-                .map(change -> new GraphItem.PriceItem(change.getPublishDate().truncatedTo(ChronoUnit.HOURS),
-                                                       change.getPrice()))
+                .map(change -> new KvGraphItem.PriceItem(change.getPublishDate().truncatedTo(ChronoUnit.HOURS),
+                                                         change.getPrice()))
                 .collect(toList()))
         .build())
       .collect(toList());

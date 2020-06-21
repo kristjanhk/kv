@@ -10,7 +10,7 @@ import java.util.List;
 @RegisterForReflection
 @Builder
 @Data
-public class GraphItem {
+public class KvGraphItem {
   private String uniqueId;
   private String link;
   private List<PriceItem> data;

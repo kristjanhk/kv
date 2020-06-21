@@ -59,14 +59,14 @@ public class Auto24ClientParams {
   @QueryParam("c")
   private String other;
 
-  public static Auto24ClientParams createSaleParams() {
+  public static Auto24ClientParams createLexusParams() {
     return defaultBuilder().build();
   }
 
   private static Auto24ClientParamsBuilder defaultBuilder() {
     return builder()
       .vehicleType(VehicleType.CAR.getValue())
-      .model(LexusModel.LS_ALL.getValue())
+      .model(LexusModel.ALL.getValue())
       .mark(Mark.LEXUS.getValue())
       .showTotal(ShowTotal._200.getValue())
       .minYear(2006);
