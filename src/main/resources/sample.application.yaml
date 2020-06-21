@@ -35,7 +35,7 @@ quarkus:
       format: "%d{HH:mm:ss.SSS} %p (%F:%L) %s%e%n"
     file:
       enable: true
-      format: "%d{HH:mm:ss.SSS} %p (%F:%L) %s%e%n"
+      format: "%d{dd.MM.yyyy HH:mm:ss.SSS} %p (%F:%L) %s%e%n"
       async: true
     category:
       'org.hibernate':
@@ -48,8 +48,9 @@ quarkus:
 eu:
   kyngas:
     kv:
-      client:
-        QueryClient/mp-rest/url: https://www.kv.ee
-
-scraper:
-  enabled: true
+      kv:
+        rest:
+          KvClient/mp-rest/url: https://www.kv.ee
+      auto24:
+        rest:
+          Auto24Client/mp-rest/url: https://www.auto24.ee
