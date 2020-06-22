@@ -2,12 +2,14 @@ package eu.kyngas.kv.util;
 
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.jsoup.nodes.Document;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
+@Slf4j
 @Data
 @RegisterForReflection
 public class Page<T> {
@@ -31,6 +33,7 @@ public class Page<T> {
     this.pageCountIncrementer = pageCountIncrementer;
     this.resultParser = resultParser;
 
+    log.info("Fetching {} of {}", index, size != null ? size : "?");
     Document document = pageFetcher.apply(index);
     this.size = size != null ? size : pageCountParser.apply(document);
     this.result = resultParser.apply(document);

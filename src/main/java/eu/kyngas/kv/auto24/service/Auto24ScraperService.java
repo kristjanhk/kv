@@ -2,6 +2,7 @@ package eu.kyngas.kv.auto24.service;
 
 import eu.kyngas.kv.auto24.model.Auto24Item;
 import eu.kyngas.kv.auto24.model.Auto24SearchPageItem;
+import io.quarkus.narayana.jta.runtime.TransactionConfiguration;
 import io.quarkus.scheduler.Scheduled;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,14 +23,15 @@ public class Auto24ScraperService {
   Auto24ChangesService auto24ChangesService;
 
   // @Scheduled(cron = "0 0 * ? * *") // every hour
-  @Scheduled(every = "60s")
+  @Scheduled(every = "6000s")
   @Transactional
+  @TransactionConfiguration(timeout = 600) // 10min
   void scrapeLexus() {
     List<Auto24Item> items = auto24Service.getAllSearchItems(createLexusParams()).stream()
       .map(Auto24SearchPageItem::toAuto24Item)
       .collect(toList());
     int count = auto24ChangesService.check(items, Auto24Item.listAll());
 
-    log.info("Saved {} lexus items", count);
+    log.info("Saved {} items", count);
   }
 }

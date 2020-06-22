@@ -1,8 +1,6 @@
 package eu.kyngas.kv.auto24.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -66,7 +64,10 @@ public class Auto24SearchPageParser {
 
   private static Integer getYear(Element element) {
     Element el = element.getElementsByClass("year").first();
-    return logEx(el, () -> parseInt(el.text().strip()));
+    return logEx(el, () -> {
+      String text = el.text().strip();
+      return text == null || text.isEmpty() ? null : parseInt(text);
+    });
   }
 
   private static String getFuelType(Element element) {
@@ -98,22 +99,37 @@ public class Auto24SearchPageParser {
   }
 
   @Data
-  @AllArgsConstructor
-  @NoArgsConstructor
   private static class Description {
-    private static final Pattern PATTERN = Pattern.compile("(\\w+) (.*) (\\d\\.\\d[ \\w]*) (\\d+) kW");
+    private static final Pattern POWER_PATTERN = Pattern.compile(" (\\d+) kW");
+    private static final Pattern ENGINE_PATTERN = Pattern.compile(" (\\d\\.\\d[- \\w]*)");
+    private static final Pattern PATTERN = Pattern.compile("(\\w+) (.*)");
 
     private String mark;
     private String model;
     private String engine;
-    private double power;
+    private Double power;
 
     private static Description parse(String input) {
+      Description description = new Description();
+
+      Matcher powerMatcher = POWER_PATTERN.matcher(input);
+      if (powerMatcher.find()) {
+        description.setPower(parseDouble(powerMatcher.group(1)));
+        input = input.replaceAll(POWER_PATTERN.pattern(), "");
+      }
+
+      Matcher engineMatcher = ENGINE_PATTERN.matcher(input);
+      if (engineMatcher.find()) {
+        description.setEngine(engineMatcher.group(1));
+        input = input.replaceAll(ENGINE_PATTERN.pattern(), "");
+      }
+
       Matcher matcher = PATTERN.matcher(input);
-      return !matcher.matches() ? new Description() : new Description(matcher.group(1),
-                                                                      matcher.group(2),
-                                                                      matcher.group(3),
-                                                                      parseDouble(matcher.group(4)));
+      if (matcher.matches()) {
+        description.setMark(matcher.group(1)).setModel(matcher.group(2));
+      }
+
+      return description;
     }
   }
 

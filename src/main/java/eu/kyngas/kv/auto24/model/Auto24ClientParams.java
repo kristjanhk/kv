@@ -1,23 +1,21 @@
 package eu.kyngas.kv.auto24.model;
 
 import io.quarkus.runtime.annotations.RegisterForReflection;
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import javax.ws.rs.QueryParam;
 
 @RegisterForReflection
 @Builder
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Auto24ClientParams {
   @QueryParam("otsi")
   private final String otsi = "otsi";
 
   @QueryParam("ae")
-  private final String order;
-
+  private String order;
   @QueryParam("a")
   private int vehicleType;
   @QueryParam("bw")
@@ -60,16 +58,17 @@ public class Auto24ClientParams {
   private String other;
 
   public static Auto24ClientParams createLexusParams() {
-    return defaultBuilder().build();
-  }
-
-  private static Auto24ClientParamsBuilder defaultBuilder() {
     return builder()
       .vehicleType(VehicleType.CAR.getValue())
       .model(LexusModel.ALL.getValue())
       .mark(Mark.LEXUS.getValue())
       .showTotal(ShowTotal._200.getValue())
-      .minYear(2006);
+      .minYear(2006)
+      .build();
+  }
+
+  public static Auto24ClientParams createAllParams() {
+    return builder().vehicleType(VehicleType.CAR.getValue()).build();
   }
 
   @Getter

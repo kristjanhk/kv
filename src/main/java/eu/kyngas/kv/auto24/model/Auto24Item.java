@@ -6,8 +6,10 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.joining;
 
 @Entity
 @Data
@@ -34,6 +36,13 @@ public class Auto24Item extends PanacheEntityBase {
 
   @OneToMany(mappedBy = "auto24Item", cascade = CascadeType.PERSIST)
   private List<Auto24ChangeItem> changeItems;
+
+  @Transient
+  public String getUniqueId() {
+    return Stream.of(mark, model, year, engine, power, fuelType, transmissionType)
+      .map(String::valueOf)
+      .collect(joining(" - "));
+  }
 
   @Transient
   public Auto24ChangeItem getLatestChangeItem() {

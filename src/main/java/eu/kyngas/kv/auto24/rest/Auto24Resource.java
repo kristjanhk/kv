@@ -13,7 +13,7 @@ import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 @Slf4j
-@Path("auto")
+@Path("auto24")
 @Produces(MediaType.APPLICATION_JSON)
 public class Auto24Resource {
   @Inject
@@ -23,7 +23,7 @@ public class Auto24Resource {
   @Path("debug")
   public List<Auto24SearchPageItem> getItems() {
     Auto24ClientParams params = Auto24ClientParams.createLexusParams();
-    log.debug("AutoParams: {}", params);
+    log.debug("Auto24Params: {}", params);
 
     List<Auto24SearchPageItem> results = auto24Service.getAllSearchItems(params);
     log.info("Result count: " + results.size());
