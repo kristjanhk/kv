@@ -52,9 +52,9 @@
         }],
         yAxes: [{
           ticks: {
-            min: 100,
-            max: 600,
-            stepSize: 10
+            min: {minPrice},
+            max: {maxPrice},
+            stepSize: {stepSize}
           }
         }]
       },
@@ -63,7 +63,7 @@
       },
       title: {
         display: true,
-        text: 'Korterite üürihinnad 100 - 600 EUR'
+        text: '{title}'
       },
       tooltips: {
         callbacks: {

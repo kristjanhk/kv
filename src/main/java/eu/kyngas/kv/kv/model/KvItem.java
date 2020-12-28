@@ -1,5 +1,6 @@
 package eu.kyngas.kv.kv.model;
 
+import eu.kyngas.kv.util.StringUtil;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import lombok.*;
 
@@ -8,6 +9,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static eu.kyngas.kv.kv.model.KvClientParams.County.*;
+import static eu.kyngas.kv.kv.model.KvClientParams.Deal.*;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.joining;
 
@@ -59,11 +62,27 @@ public class KvItem extends PanacheEntityBase {
       .orElseThrow();
   }
 
-  public static List<KvItem> listSales() {
-    return KvItem.list("dealType", KvClientParams.Deal.APARTMENT_SALE.name().toLowerCase());
+  public static List<KvItem> listTartuSales() {
+    return KvItem.list("dealType = ?1 AND area = ?2",
+                       APARTMENT_SALE.name().toLowerCase(),
+                       StringUtil.capitalize(TARTU.name().toLowerCase()));
   }
 
-  public static List<KvItem> listRents() {
-    return KvItem.list("dealType", KvClientParams.Deal.APARTMENT_RENT.name().toLowerCase());
+  public static List<KvItem> listTartuRents() {
+    return KvItem.list("dealType = ?1 AND area = ?2",
+                       APARTMENT_RENT.name().toLowerCase(),
+                       StringUtil.capitalize(TARTU.name().toLowerCase()));
+  }
+
+  public static List<KvItem> listTallinnSales() {
+    return KvItem.list("dealType = ?1 AND area = ?2",
+                       APARTMENT_SALE.name().toLowerCase(),
+                       StringUtil.capitalize(TALLINN.name().toLowerCase()));
+  }
+
+  public static List<KvItem> listTallinnRents() {
+    return KvItem.list("dealType = ?1 AND area = ?2",
+                       APARTMENT_RENT.name().toLowerCase(),
+                       StringUtil.capitalize(TALLINN.name().toLowerCase()));
   }
 }

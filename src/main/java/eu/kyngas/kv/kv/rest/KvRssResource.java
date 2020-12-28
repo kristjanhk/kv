@@ -31,7 +31,7 @@ public class KvRssResource {
   @GET
   @Path("sales")
   public List<KvItem> getSales() {
-    return kvService.getRssFeed(KvClientParams.createSaleParams(identity())).getChannel().getItem().stream()
+    return kvService.getRssFeed(KvClientParams.createTartuSaleParams(identity())).getChannel().getItem().stream()
       .filter(Item::isValid)
       .map(item -> item.toKvItem(true))
       .sorted(comparing((KvItem item) -> item.getLatestChangeItem().getPublishDate().toLocalDate(), reverseOrder())
@@ -43,7 +43,7 @@ public class KvRssResource {
   @GET
   @Path("rents")
   public List<KvItem> getRents() {
-    return kvService.getRssFeed(KvClientParams.createRentParams(identity())).getChannel().getItem().stream()
+    return kvService.getRssFeed(KvClientParams.createTartuRentParams(identity())).getChannel().getItem().stream()
       .filter(Item::isValid)
       .map(item -> item.toKvItem(false))
       .sorted(comparing((KvItem item) -> item.getLatestChangeItem().getPublishDate().toLocalDate(), reverseOrder())
@@ -55,7 +55,7 @@ public class KvRssResource {
   @GET
   @Path("console/sales")
   public int getConsoleSales() {
-    log.info(kvService.getRssFeed(KvClientParams.createSaleParams(identity())).getChannel().getItem().stream()
+    log.info(kvService.getRssFeed(KvClientParams.createTartuSaleParams(identity())).getChannel().getItem().stream()
                .sorted(comparing((Item item) -> item.getPubDate().toLocalDate(), reverseOrder())
                          .thenComparing((Item item) -> item.getDescription().getParams().getPricePerM2(),
                                         nullsLast(naturalOrder()))
@@ -68,7 +68,7 @@ public class KvRssResource {
   @GET
   @Path("console/rents")
   public int getConsoleRents() {
-    log.info(kvService.getRssFeed(KvClientParams.createRentParams(identity())).getChannel().getItem().stream()
+    log.info(kvService.getRssFeed(KvClientParams.createTartuRentParams(identity())).getChannel().getItem().stream()
                .sorted(comparing((Item item) -> item.getPubDate().toLocalDate(), reverseOrder())
                          .thenComparing((Item item) -> item.getDescription().getParams().getPricePerM2(),
                                         nullsLast(naturalOrder()))

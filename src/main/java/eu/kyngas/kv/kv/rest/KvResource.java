@@ -25,7 +25,7 @@ public class KvResource {
   @GET
   @Path("debug")
   public List<KvSearchPageItem> getDebug() {
-    KvClientParams params = KvClientParams.createSaleParams(identity());
+    KvClientParams params = KvClientParams.createTartuSaleParams(identity());
     log.debug("KvParams: {}", params);
 
     List<KvSearchPageItem> items = kvService.getAllSearchItems(params);

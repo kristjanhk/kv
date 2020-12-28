@@ -52,9 +52,9 @@
         }],
         yAxes: [{
           ticks: {
-            min: 50000,
-            max: 200000,
-            stepSize: 1000
+            min: {minPrice},
+            max: {maxPrice},
+            stepSize: {stepSize}
           }
         }]
       },
@@ -63,7 +63,7 @@
       },
       title: {
         display: true,
-        text: 'Korterite müügihinnad 50 000 - 200 000 EUR'
+        text: '{title}'
       },
       tooltips: {
         callbacks: {

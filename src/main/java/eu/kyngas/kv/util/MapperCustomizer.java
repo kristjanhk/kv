@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.quarkus.jackson.ObjectMapperCustomizer;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
@@ -35,8 +36,8 @@ public class MapperCustomizer implements ObjectMapperCustomizer {
   }
 
   private static void configure(ObjectMapper mapper) {
-    mapper.findAndRegisterModules();
     mapper.setPropertyNamingStrategy(SNAKE_CASE);
+    mapper.registerModule(new JavaTimeModule());
     mapper.registerModule(new SimpleModule()
                             .addDeserializer(JsonObject.class, deserializer(Map.class, JsonObject::new))
                             .addDeserializer(JsonArray.class, deserializer(List.class, JsonArray::new)));

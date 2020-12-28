@@ -9,6 +9,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
@@ -62,7 +63,7 @@ public class KvClientParams {
     return URLEncoder.encode(params, StandardCharsets.UTF_8);
   }
 
-  public static KvClientParams createSaleParams(UnaryOperator<KvClientParamsBuilder> operator) {
+  public static KvClientParams createTartuSaleParams(Function<KvClientParamsBuilder, KvClientParamsBuilder> operator) {
     return operator.<KvClientParamsBuilder>compose(b -> b
       .dealType(Deal.APARTMENT_SALE.getType())
       .priceType(Price.TOTAL.getType())
@@ -72,7 +73,7 @@ public class KvClientParams {
       .build();
   }
 
-  public static KvClientParams createRentParams(UnaryOperator<KvClientParamsBuilder> operator) {
+  public static KvClientParams createTartuRentParams(Function<KvClientParamsBuilder, KvClientParamsBuilder> operator) {
     return operator.<KvClientParamsBuilder>compose(b -> b
       .dealType(Deal.APARTMENT_RENT.getType())
       .priceType(Price.TOTAL.getType())
@@ -82,6 +83,17 @@ public class KvClientParams {
       .build();
   }
 
+  public static KvClientParams createTallinnSaleParams(UnaryOperator<KvClientParamsBuilder> operator) {
+    return createTartuSaleParams(operator.compose(b -> b
+      .county(County.TALLINN.getType())
+      .parish(Parish.HARJUMAA.getType())));
+  }
+
+  public static KvClientParams createTallinnRentParams(UnaryOperator<KvClientParamsBuilder> operator) {
+    return createTartuRentParams(operator.compose(b -> b
+      .county(County.TALLINN.getType())
+      .parish(Parish.HARJUMAA.getType())));
+  }
 
   private static KvClientParamsBuilder defaultBuilder() {
     return KvClientParams.builder()
@@ -95,6 +107,17 @@ public class KvClientParams {
       .parish(Parish.TARTUMAA.getType())
       .roomsMin(1)
       .roomsMax(8);
+  }
+
+  @Getter
+  @RequiredArgsConstructor
+  private enum Act {
+    SEARCH_SIMPLE("search.simple"),
+    SEARCH_OBJECT_COORDS("search.objectcoords"),
+    SEARCH_OBJECT_INFO("search.objectinfo"),
+    SEARCH_MAP("search.map"),
+    ;
+    private final String type;
   }
 
   @Getter
@@ -128,7 +151,7 @@ public class KvClientParams {
 
   @Getter
   @RequiredArgsConstructor
-  private enum County {
+  public enum County {
     TARTU(12),
     TALLINN(1);
     private final int type;
