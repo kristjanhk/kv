@@ -33,7 +33,7 @@ class KvSearchPageParserTest {
   @Test
   void parse() throws IOException {
     List<KvSearchPageItem> items =
-      KvSearchPageParser.parse(Jsoup.parse(Files.readString(PATH.resolve("kv_search_item.html"))), null);
+      KvSearchPageParser.parse(Jsoup.parse(Files.readString(PATH.resolve("kv_search_item.html"))), new KvClientParams());
 
     assertEquals(1, items.size());
   }

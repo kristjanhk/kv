@@ -28,13 +28,12 @@ public class KvService {
   }
 
   public Page<List<KvSearchPageItem>> getSearchFeed(KvClientParams kvClientParams) {
-    String type = kvClientParams.getType();
     return new Page<>(1,
                       null,
                       index -> Jsoup.parse(kvClient.getSearchPage(kvClientParams, index)),
                       KvSearchPageParser::getPageCount,
                       index -> index + 1,
-                      document -> KvSearchPageParser.parse(document, type));
+                      document -> KvSearchPageParser.parse(document, kvClientParams));
   }
 
   public List<KvSearchPageItem> getAllSearchItems(KvClientParams kvClientParams) {

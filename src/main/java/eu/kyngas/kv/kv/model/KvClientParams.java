@@ -66,28 +66,24 @@ public class KvClientParams {
   public static KvClientParams createTartuSaleParams(Function<KvClientParamsBuilder, KvClientParamsBuilder> operator) {
     return operator.<KvClientParamsBuilder>compose(b -> b
       .county(County.TARTU.getType())
-      //.parish(Parish.TARTUMAA.getType())
     ).apply(defaultSaleBuilder()).build();
   }
 
   public static KvClientParams createTartuRentParams(Function<KvClientParamsBuilder, KvClientParamsBuilder> operator) {
     return operator.<KvClientParamsBuilder>compose(b -> b
       .county(County.TARTU.getType())
-      //.parish(Parish.TARTUMAA.getType())
     ).apply(defaultRentBuilder()).build();
   }
 
   public static KvClientParams createTallinnSaleParams(UnaryOperator<KvClientParamsBuilder> operator) {
     return operator.<KvClientParamsBuilder>compose(b -> b
       .county(County.TALLINN.getType())
-      //.parish(Parish.HARJUMAA.getType())
     ).apply(defaultSaleBuilder()).build();
   }
 
   public static KvClientParams createTallinnRentParams(UnaryOperator<KvClientParamsBuilder> operator) {
     return operator.<KvClientParamsBuilder>compose(b -> b
       .county(County.TALLINN.getType())
-      //.parish(Parish.HARJUMAA.getType())
     ).apply(defaultRentBuilder()).build();
   }
 
@@ -169,7 +165,7 @@ public class KvClientParams {
 
   @Getter
   @RequiredArgsConstructor
-  private enum Parish {
+  public enum Parish {
     TARTUMAA(1063),
     HARJUMAA(1061);
     private final int type;

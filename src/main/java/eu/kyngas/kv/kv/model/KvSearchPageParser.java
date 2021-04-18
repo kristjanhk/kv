@@ -16,13 +16,16 @@ import java.util.stream.Collectors;
 @Slf4j
 public class KvSearchPageParser {
 
-  public static List<KvSearchPageItem> parse(Document document, String type) {
-    return document.getElementsByClass("object-type-apartment object-item").stream()
+  public static List<KvSearchPageItem> parse(Document document, KvClientParams params) {
+    String objectType = params.getType() != null && params.getType().startsWith("house")
+      ? "object-type-house"
+      : "object-type-apartment";
+    return document.getElementsByClass(objectType + " object-item").stream()
       .map(element -> {
         Location location = getLocation(getAddress(element));
         return KvSearchPageItem.builder()
           .id(getId(element))
-          .type(type)
+          .type(params.getType())
           .imgLink(getImgLink(element))
           .county(location.getCounty())
           .area(location.getArea())

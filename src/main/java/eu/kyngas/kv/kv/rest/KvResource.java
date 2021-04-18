@@ -45,7 +45,7 @@ public class KvResource {
   @Path("debug2")
   @Produces(MediaType.TEXT_HTML)
   public String getDebug2() {
-    KvClientParams params = KvClientParams.createTartuSaleParams(identity());
+    KvClientParams params = KvClientParams.createTartuSaleParams(b -> b.dealType(KvClientParams.Deal.HOUSE_SALE.getType()));
     log.info("KvParams: {}", params);
 
     return kvClient.getSearchPage(params, 1);

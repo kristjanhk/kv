@@ -39,7 +39,7 @@ dependencies {
 }
 
 group 'eu.kyngas'
-version '1.0.6-SNAPSHOT'
+version '1.0.9-SNAPSHOT'
 
 compileJava {
   options.encoding = 'UTF-8'
