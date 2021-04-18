@@ -3,7 +3,6 @@ package eu.kyngas.kv.auto24.service;
 import eu.kyngas.kv.auto24.model.Auto24Item;
 import eu.kyngas.kv.auto24.model.Auto24SearchPageItem;
 import io.quarkus.narayana.jta.runtime.TransactionConfiguration;
-import io.quarkus.scheduler.Scheduled;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -23,7 +22,7 @@ public class Auto24ScraperService {
   Auto24ChangesService auto24ChangesService;
 
   // @Scheduled(cron = "0 0 * ? * *") // every hour
-  @Scheduled(every = "6000s")
+  //@Scheduled(every = "6000s")
   @Transactional
   @TransactionConfiguration(timeout = 600) // 10min
   void scrapeLexus() {

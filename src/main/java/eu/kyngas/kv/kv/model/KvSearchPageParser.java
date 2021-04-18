@@ -129,7 +129,7 @@ public class KvSearchPageParser {
     Element el = element.getElementsByClass("object-price-value").first();
     return logEx(el, () -> {
       String text = el.text().strip();
-      return Double.parseDouble(text.substring(0, text.length() - 1).replaceAll(" ", ""));
+      return Double.parseDouble(text.replaceAll("\\D", ""));
     });
   }
 
@@ -140,7 +140,7 @@ public class KvSearchPageParser {
       if (text.isEmpty()) {
         return null;
       }
-      return Double.parseDouble(text.replace("€/m²", "").replaceAll(" ", ""));
+      return Double.parseDouble(text.replaceAll("\\D", ""));
     });
   }
 
