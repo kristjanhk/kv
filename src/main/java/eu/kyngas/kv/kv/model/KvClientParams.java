@@ -65,34 +65,46 @@ public class KvClientParams {
 
   public static KvClientParams createTartuSaleParams(Function<KvClientParamsBuilder, KvClientParamsBuilder> operator) {
     return operator.<KvClientParamsBuilder>compose(b -> b
-      .dealType(Deal.APARTMENT_SALE.getType())
-      .priceType(Price.TOTAL.getType())
-      .priceMin(5000)
-      .priceMax(500_000))
-      .apply(defaultBuilder())
-      .build();
+      .county(County.TARTU.getType())
+      //.parish(Parish.TARTUMAA.getType())
+    ).apply(defaultSaleBuilder()).build();
   }
 
   public static KvClientParams createTartuRentParams(Function<KvClientParamsBuilder, KvClientParamsBuilder> operator) {
     return operator.<KvClientParamsBuilder>compose(b -> b
-      .dealType(Deal.APARTMENT_RENT.getType())
-      .priceType(Price.TOTAL.getType())
-      .priceMin(0)
-      .priceMax(1000))
-      .apply(defaultBuilder())
-      .build();
+      .county(County.TARTU.getType())
+      //.parish(Parish.TARTUMAA.getType())
+    ).apply(defaultRentBuilder()).build();
   }
 
   public static KvClientParams createTallinnSaleParams(UnaryOperator<KvClientParamsBuilder> operator) {
-    return createTartuSaleParams(operator.compose(b -> b
+    return operator.<KvClientParamsBuilder>compose(b -> b
       .county(County.TALLINN.getType())
-      .parish(Parish.HARJUMAA.getType())));
+      //.parish(Parish.HARJUMAA.getType())
+    ).apply(defaultSaleBuilder()).build();
   }
 
   public static KvClientParams createTallinnRentParams(UnaryOperator<KvClientParamsBuilder> operator) {
-    return createTartuRentParams(operator.compose(b -> b
+    return operator.<KvClientParamsBuilder>compose(b -> b
       .county(County.TALLINN.getType())
-      .parish(Parish.HARJUMAA.getType())));
+      //.parish(Parish.HARJUMAA.getType())
+    ).apply(defaultRentBuilder()).build();
+  }
+
+  private static KvClientParamsBuilder defaultSaleBuilder() {
+    return defaultBuilder()
+      .dealType(Deal.APARTMENT_SALE.getType())
+      .priceType(Price.TOTAL.getType())
+      .priceMin(5000)
+      .priceMax(500_000);
+  }
+
+  private static KvClientParamsBuilder defaultRentBuilder() {
+    return defaultBuilder()
+      .dealType(Deal.APARTMENT_RENT.getType())
+      .priceType(Price.TOTAL.getType())
+      .priceMin(0)
+      .priceMax(1000);
   }
 
   private static KvClientParamsBuilder defaultBuilder() {
@@ -101,10 +113,8 @@ public class KvClientParams {
       .page(1)
       .orderby(Order.NEWEST_FIRST.getType())
       .pageSize(10_000)
-      .county(County.TARTU.getType())
       .searchType("new")
       .objectType("1")
-      .parish(Parish.TARTUMAA.getType())
       .roomsMin(1)
       .roomsMax(8);
   }

@@ -4,6 +4,7 @@ import eu.kyngas.kv.kv.model.KvClientParams;
 import eu.kyngas.kv.kv.model.KvSearchPageItem;
 import eu.kyngas.kv.kv.service.KvService;
 import lombok.extern.slf4j.Slf4j;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -21,12 +22,15 @@ import static java.util.function.UnaryOperator.identity;
 public class KvResource {
   @Inject
   KvService kvService;
+  @Inject
+  @RestClient
+  KvClient kvClient;
 
   @GET
   @Path("debug")
   public List<KvSearchPageItem> getDebug() {
     KvClientParams params = KvClientParams.createTartuSaleParams(identity());
-    log.debug("KvParams: {}", params);
+    log.info("KvParams: {}", params);
 
     List<KvSearchPageItem> items = kvService.getAllSearchItems(params);
 
@@ -35,6 +39,16 @@ public class KvResource {
       .collect(Collectors.joining("\n")));
     log.info("Fetched {} items", items.size());
     return items;
+  }
+
+  @GET
+  @Path("debug2")
+  @Produces(MediaType.TEXT_HTML)
+  public String getDebug2() {
+    KvClientParams params = KvClientParams.createTartuSaleParams(identity());
+    log.info("KvParams: {}", params);
+
+    return kvClient.getSearchPage(params, 1);
   }
 
 
