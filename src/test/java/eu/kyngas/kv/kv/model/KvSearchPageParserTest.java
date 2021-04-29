@@ -15,8 +15,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 class KvSearchPageParserTest {
   private static final Path PATH = Paths.get("src", "test", "resources");
@@ -33,7 +32,8 @@ class KvSearchPageParserTest {
   @Test
   void parse() throws IOException {
     List<KvSearchPageItem> items =
-      KvSearchPageParser.parse(Jsoup.parse(Files.readString(PATH.resolve("kv_search_item.html"))), new KvClientParams());
+      KvSearchPageParser.parse(Jsoup.parse(Files.readString(PATH.resolve("kv_search_item.html"))),
+                               KvClientParams.builder().dealType(KvClientParams.Deal.APARTMENT_SALE.getType()).build());
 
     assertEquals(1, items.size());
   }
@@ -56,7 +56,7 @@ class KvSearchPageParserTest {
 
   @Test
   void getAddress() {
-    assertEquals("Tartumaa, Tartu, Tartu linn, Ränilinn, Kristalli", KvSearchPageParser.getAddress(element));
+    assertEquals("Tartumaa, Tartu, Tartu linn, Ränilinn, Kristalli tn 2a-10", KvSearchPageParser.getAddress(element));
   }
 
   @Test
@@ -133,7 +133,7 @@ class KvSearchPageParserTest {
     assertEquals("Tartumaa", location.getCounty());
     assertEquals("Tartu", location.getArea());
     assertEquals("Vaksali", location.getDistrict());
-    assertEquals("Kastani tn 38", location.getAddress());
+    assertEquals("Kastani 38", location.getAddress());
   }
 
   @Test
@@ -152,5 +152,10 @@ class KvSearchPageParserTest {
     assertEquals("Tartu", location.getArea());
     assertEquals("Tammelinn", location.getDistrict());
     assertNull(location.getAddress());
+  }
+
+  @Test
+  void getBroneeritud() {
+    assertTrue(KvSearchPageParser.getBroneeritud(element));
   }
 }

@@ -28,6 +28,7 @@ public class KvChangeItem extends PanacheEntityBase {
   private String imgLink;
   private Double price;
   private Double pricePerM2;
+  private boolean broneeritud;
 
   @JsonIgnore
   @ToString.Exclude

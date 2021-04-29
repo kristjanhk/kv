@@ -39,6 +39,7 @@ public class KvSearchPageParser {
           .publishDate(getPublishDate(element))
           .price(getPrice(element))
           .priceM2(getPriceM2(element))
+          .broneeritud(getBroneeritud(element))
           .build();
       })
       .collect(Collectors.toList());
@@ -147,6 +148,14 @@ public class KvSearchPageParser {
     });
   }
 
+  static Boolean getBroneeritud(Element element) {
+    Element el = element.getElementsByClass("object-title").first();
+    return logEx(el, () -> el.children().stream()
+      .filter(child -> !child.hasClass("object-title-a") && child.hasText())
+      .map(child -> child.text().strip())
+      .anyMatch("(Broneeritud)"::equals));
+  }
+
   @Data
   static class Location {
     private String county;
@@ -172,7 +181,7 @@ public class KvSearchPageParser {
     }
 
     result.setDistrict(parts.get(parts.size() - 2));
-    result.setAddress(parts.get(parts.size() - 1));
+    result.setAddress(parts.get(parts.size() - 1).replaceFirst("\\stn\\s", " "));
     return result;
   }
 

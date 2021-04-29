@@ -1,8 +1,10 @@
 package eu.kyngas.kv.kv.rest;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import eu.kyngas.kv.kv.model.*;
+import eu.kyngas.kv.kv.model.KvChangeItem;
+import eu.kyngas.kv.kv.model.KvGraphClientParams;
+import eu.kyngas.kv.kv.model.KvGraphItem;
 import eu.kyngas.kv.kv.model.KvGraphItem.PriceItem;
+import eu.kyngas.kv.kv.model.KvItem;
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateExtension;
 import io.quarkus.qute.TemplateInstance;
@@ -18,8 +20,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static eu.kyngas.kv.kv.model.KvClientParams.*;
-import static eu.kyngas.kv.kv.model.KvItem.*;
+import static eu.kyngas.kv.kv.model.KvClientParams.Deal;
+import static eu.kyngas.kv.kv.model.KvClientParams.Parish;
+import static eu.kyngas.kv.kv.model.KvItem.listDeals;
 import static eu.kyngas.kv.util.Predicates.withPrevious;
 import static java.time.format.DateTimeFormatter.ISO_DATE_TIME;
 import static java.util.Comparator.comparing;
@@ -35,42 +38,42 @@ public class KvGraphResource {
 
   @GET
   @Path("tartu/apartment/sales")
-  public TemplateInstance getTartuApartmentSales(@BeanParam KvGraphClientParams params) throws JsonProcessingException {
+  public TemplateInstance getTartuApartmentSales(@BeanParam KvGraphClientParams params) {
     List<KvGraphItem> items = toGraphItems(filterByParams(listDeals(Deal.APARTMENT_SALE, Parish.TARTUMAA), params));
     return metadata(sales, params, items).data("items", items);
   }
 
   @GET
   @Path("tartu/house/sales")
-  public TemplateInstance getTartuHouseSales(@BeanParam KvGraphClientParams params) throws JsonProcessingException {
+  public TemplateInstance getTartuHouseSales(@BeanParam KvGraphClientParams params) {
     List<KvGraphItem> items = toGraphItems(filterByParams(listDeals(Deal.HOUSE_SALE, Parish.TARTUMAA), params));
     return metadata(sales, params, items).data("items", items);
   }
 
   @GET
   @Path("tartu/rents")
-  public TemplateInstance getTartuRents(@BeanParam KvGraphClientParams params) throws JsonProcessingException {
+  public TemplateInstance getTartuRents(@BeanParam KvGraphClientParams params) {
     List<KvGraphItem> items = toGraphItems(filterByParams(listDeals(Deal.APARTMENT_RENT, Parish.TARTUMAA), params));
     return metadata(rents, params, items).data("items", items);
   }
 
   @GET
   @Path("tallinn/apartment/sales")
-  public TemplateInstance getTallinnApartmentSales(@BeanParam KvGraphClientParams params) throws JsonProcessingException {
+  public TemplateInstance getTallinnApartmentSales(@BeanParam KvGraphClientParams params) {
     List<KvGraphItem> items = toGraphItems(filterByParams(listDeals(Deal.APARTMENT_SALE, Parish.HARJUMAA), params));
     return metadata(sales, params, items).data("items", items);
   }
 
   @GET
   @Path("tallinn/apartment/sales")
-  public TemplateInstance getTallinnHouseSales(@BeanParam KvGraphClientParams params) throws JsonProcessingException {
+  public TemplateInstance getTallinnHouseSales(@BeanParam KvGraphClientParams params) {
     List<KvGraphItem> items = toGraphItems(filterByParams(listDeals(Deal.HOUSE_SALE, Parish.HARJUMAA), params));
     return metadata(sales, params, items).data("items", items);
   }
 
   @GET
   @Path("tallinn/rents")
-  public TemplateInstance getTallinnRents(@BeanParam KvGraphClientParams params) throws JsonProcessingException {
+  public TemplateInstance getTallinnRents(@BeanParam KvGraphClientParams params) {
     List<KvGraphItem> items = toGraphItems(filterByParams(listDeals(Deal.APARTMENT_RENT, Parish.HARJUMAA), params));
     return metadata(rents, params, items).data("items", items);
   }
@@ -119,10 +122,11 @@ public class KvGraphResource {
     return 2000;
   }
 
-  private List<KvItem> filterByParams(List<KvItem> items, KvGraphClientParams params) throws JsonProcessingException {
+  private List<KvItem> filterByParams(List<KvItem> items, KvGraphClientParams params) {
     Stream<KvItem> stream = items.stream();
     if (params.getActive() != null) {
-      stream = stream.filter(kvItem -> !kvItem.isRemoved() == params.getActive());
+      stream = stream.filter(kvItem -> !params.getActive()
+        || (!kvItem.isRemoved() && !kvItem.getLatestChangeItem().isBroneeritud()));
     }
     if (params.getFloor() != null) {
       stream = stream.filter(kvItem -> kvItem.getRoomFloor() != null

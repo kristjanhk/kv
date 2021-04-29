@@ -26,6 +26,7 @@ public class KvSearchPageItem {
   private LocalDateTime publishDate;
   private double price;
   private Double priceM2;
+  private boolean broneeritud;
 
   public String getLink() {
     return "https://www.kv.ee/" + id;
@@ -38,6 +39,7 @@ public class KvSearchPageItem {
       .imgLink(imgLink)
       .price(price)
       .pricePerM2(priceM2)
+      .broneeritud(broneeritud)
       .build();
     KvItem item = KvItem.builder()
       .externalId(id)
