@@ -69,6 +69,7 @@ public class KvChangesService {
   private static void markRemovedItems(Map<Long, KvItem> newItemByExtId, Map<Long, KvItem> dbItemByExtId) {
     dbItemByExtId.entrySet().stream()
       .filter(e -> !newItemByExtId.containsKey(e.getKey()))
+      .filter(e -> !e.getValue().isRemoved())
       .forEach(dbItem -> dbItem.getValue().setRemoved(true).setRemovedDate(now()));
   }
 
