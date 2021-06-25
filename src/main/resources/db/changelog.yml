@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - includeAll:
+      path: db/routines/
+  - includeAll:
+      path: db/init/
+  - includeAll:
+      path: db/views/

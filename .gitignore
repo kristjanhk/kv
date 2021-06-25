@@ -30,6 +30,4 @@ nb-configuration.xml
 # Gradle
 .gradle/
 build/
-/src/main/resources/application.yaml
 /kvdb/
-/quarkus.log

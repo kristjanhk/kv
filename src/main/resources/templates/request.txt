@@ -1,0 +1,10 @@
+{request.prefix} Processing {request.method} request for url {request.url}
+{request.prefix} Routing to {request.resource}
+{#each request.headers}
+{request.prefix} Header: {it.key}: {it.value}
+{/each}
+{#each request.queryParams}
+{request.prefix} Query param: {it.key}: {it.value}
+{/each}
+{request.prefix} Body:
+{request.body}

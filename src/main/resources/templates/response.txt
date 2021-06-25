@@ -1,0 +1,7 @@
+{response.prefix} Status code: {response.getStatusCode()}
+{response.prefix} Status message: {response.getStatusMessage()}
+{#each response.headers}
+{response.prefix} Header: {it.key}: {it.value}
+{/each}
+{response.prefix} Body:
+{response.body}
