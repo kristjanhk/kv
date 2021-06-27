@@ -1,7 +1,30 @@
 databaseChangeLog:
-  - includeAll:
-      path: db/routines/
-  - includeAll:
-      path: db/init/
-  - includeAll:
-      path: db/views/
+# https://github.com/quarkusio/quarkus/issues/16292
+#  - includeAll:
+#      path: db/routines/
+#  - includeAll:
+#      path: db/init/
+#  - includeAll:
+#      path: db/views/
+
+# routines
+  - include:
+      file: db/routines/audit.sql
+  - include:
+      file: db/routines/f_concat.sql
+  - include:
+      file: db/routines/f_jsonb_subtract.sql
+
+# init
+  - include:
+      file: db/init/01-sequence.sql
+  - include:
+      file: db/init/02-v1_tables.sql
+  - include:
+      file: db/init/03-kv.sql
+  - include:
+      file: db/init/08-migrate_v1_v2.sql
+
+# views
+  - include:
+      file: db/views/v_kv_graph_unique_latest.sql
