@@ -31,3 +31,5 @@ nb-configuration.xml
 .gradle/
 build/
 /kvdb/
+
+src/main/resources/META-INF/resources/

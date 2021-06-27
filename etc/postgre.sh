@@ -5,7 +5,7 @@ docker run \
 -d \
 --restart always \
 -v postgre:/var/lib/postgresql/data \
---env POSTGRES_USER=kristjank \
---env POSTGRES_PASSWORD=kristjank \
+--env POSTGRES_USER=kv \
+--env POSTGRES_PASSWORD=kv \
 --name kvdb \
 postgres:12
